@@ -278,13 +278,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
 
     // remove object from the download
     [self.downloads removeObjectForKey:fileIdentifier];
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // Show a local notification when download is over.
-        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-        localNotification.alertBody = [NSString stringWithFormat:@"%@ has been downloaded", download.friendlyName];
-        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-    });
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
@@ -485,11 +478,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                     // Call the completion handler to tell the system that there are no other background transfers.
                     completionHandler();
-
-                    // Show a local notification when all downloads are over.
-                    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-                    localNotification.alertBody = @"All files have been downloaded!";
-                    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
                 }];
 
                 // Make nil the backgroundTransferCompletionHandler.
